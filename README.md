@@ -1,3 +1,4 @@
-# Read Source of Classic JavaScript Library
+# Read JavaScript Source
+Learn from master by reading their javascript source code.
 ## Include
 * Zepto.js
