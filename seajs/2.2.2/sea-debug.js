@@ -100,10 +100,14 @@ var emit = seajs.emit = function(name, data) {
  * util-path.js - The utilities for operating path such as id, uri
  */
 
+// match dir/ dir/to/a/ http://dir/to/a/
 var DIRNAME_RE = /[^?#]*\//
-
+// match /./
 var DOT_RE = /\/\.\//g
+// match /dir/../
 var DOUBLE_DOT_RE = /\/[^/]+\/\.\.\//
+// match a// b//
+// not match :// in http://, /// in file:///
 var DOUBLE_SLASH_RE = /([^:/])\/\//g
 
 // Extract the directory portion of a path
@@ -142,6 +146,8 @@ function normalize(path) {
     return path.substring(0, last)
   }
 
+  // if path ends with '.js' '.css' '/' or include '?', return path
+  // else add suffix '.js'
   return (path.substring(last - 2) === ".js" ||
       path.indexOf("?") > 0 ||
       path.substring(last - 3) === ".css" ||
@@ -157,6 +163,9 @@ function parseAlias(id) {
   return alias && isString(alias[id]) ? alias[id] : id
 }
 
+// try to expand id
+// dir/a ==> paths['dir'] + '/a'
+// dir/a/b ==> paths['dir'] + '/a/b'
 function parsePaths(id) {
   var paths = data.paths
   var m
@@ -168,6 +177,8 @@ function parsePaths(id) {
   return id
 }
 
+// try to expand id
+// {var} ==> vars['var']
 function parseVars(id) {
   var vars = data.vars
 
@@ -180,6 +191,7 @@ function parseVars(id) {
   return id
 }
 
+// rule can be function having uri as parameter.
 function parseMap(uri) {
   var map = data.map
   var ret = uri
@@ -200,7 +212,7 @@ function parseMap(uri) {
   return ret
 }
 
-
+// match //. or :/
 var ABSOLUTE_RE = /^\/\/.|:\//
 var ROOT_DIR_RE = /^.*?\/\/.*?\//
 
@@ -250,10 +262,12 @@ function id2Uri(id, refUri) {
 
 
 var doc = document
+// cwd is current working directory
 var cwd = dirname(doc.URL)
 var scripts = doc.scripts
 
 // Recommend to add `seajsnode` id for the `sea.js` script element
+// QUESTION: Why the last script node is loaderScript? It seems unscientific.
 var loaderScript = doc.getElementById("seajsnode") ||
     scripts[scripts.length - 1]
 
