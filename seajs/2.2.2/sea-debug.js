@@ -268,6 +268,7 @@ var scripts = doc.scripts
 
 // Recommend to add `seajsnode` id for the `sea.js` script element
 // QUESTION: Why the last script node is loaderScript? It seems unscientific.
+// Answer: doc.scripts是实时的，执行完成的或执行中的才会出现在其中，执行中的一定是最后一个。
 var loaderScript = doc.getElementById("seajsnode") ||
     scripts[scripts.length - 1]
 
@@ -782,7 +783,7 @@ Module.define = function (id, deps, factory) {
 
   // Emit `define` event, used in nocache plugin, seajs node version etc
   emit("define", meta)
-
+  // QUESTION: 何时meta.uri才会不存在
   meta.uri ? Module.save(meta.uri, meta) :
       // Save information for "saving" work in the script onload event
       anonymousMeta = meta
