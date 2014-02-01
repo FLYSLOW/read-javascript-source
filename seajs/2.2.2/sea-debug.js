@@ -483,6 +483,7 @@ var anonymousMeta
 
 var fetchingList = {}
 var fetchedList = {}
+// QUESTION: callbackList是做什么用的
 var callbackList = {}
 
 var STATUS = Module.STATUS = {
